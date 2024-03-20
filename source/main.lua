@@ -2,6 +2,8 @@ import "CoreLibs/object"
 import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
+import "CoreLibs/animation"
+import "lib/AnimatedSprite.lua"
 
 import "player"
 import "coin"
@@ -49,6 +51,11 @@ sounds = {
 
 local lastCoinMoveTime = 0
 
+function playdate.update()
+
+  gfx.sprite.update()
+
+end
 
 local function resetTimer()
   playTimer = playdate.timer.new(playTime, playTime, 0, playdate.easingFunctions.linear)
@@ -103,6 +110,16 @@ local function initialize()
   coinSprite:moveCoin(coinSprite2)
   coinSprite2:moveCoin(coinSprite)
 
+
+  local imagetable = gfx.imagetable.new("images/sheet18-table-16-18")
+  local sprite = AnimatedSprite.new(imagetable)
+  sprite:addState('down',19 ,24,{ tickStep = 10 })
+  sprite:addState('up',13 ,18,{ tickStep = 10 })
+  --sprite:addState("yoyo", 6, nil, {tickStep = 2, nextAnimation = "idle"}).asDefault()
+  sprite:moveTo(100, 110)
+  sprite :changeState('up', true)
+
+  sprite:playAnimation()
 
 
   local backgroundImage = gfx.image.new("images/background")

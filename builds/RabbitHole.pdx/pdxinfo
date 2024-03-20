@@ -1,14 +1,2 @@
-name=Styve Rabbit Hole
-author=Styve Rocha
-description=Eat all of them
-bundleID=com.rochastyve.rabbithole
-version=1.0.10
-buildNumber=16
-imagePath=SystemAssets
-pdxinfoURL=https://github.com/DaveLeonard/rabbit-hole/blob/main/pdxinfo
-gameURL=https://github.com/DaveLeonard/rabbit-hole/tree/main/builds/RabbitHole.pdx.zip
-launchSoundPath=SystemAssets/audio/startup
-contentWarning=This game contains mild realistic violence and bloodshed.
-contentWarning2=This game contains flashing content that may not be suitable for photosensitive epilepsy.
 pdxversion=20400
-buildtime=764259337
+buildtime=764263460
