@@ -1,0 +1,9 @@
+name=Styve Rabbit Hole
+author=Styve Rocha
+description=Eat all of them
+bundleID=com.rochastyve.rabbithole
+version=1.0
+buildNumber=7
+imagePath=SystemAssets
+pdxversion=11200
+buildtime=723208494
