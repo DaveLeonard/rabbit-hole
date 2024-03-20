@@ -16,7 +16,7 @@ class('Well').extends(gfx.sprite)
     self.accel = accel
     self.curSpeed = speed
     self.minSpeed = speed / 2
-    self.yOffset = math.random(-10, 10) / 10
+    self.yOffset = math.random(-25, 25) / 10
     self.dir = 1
   end
 
@@ -49,7 +49,7 @@ class('Well').extends(gfx.sprite)
     end
 
     self:moveWithCollisions(newx,newy)
-    self.curSpeed -= self.dir * self.accel
+    self.curSpeed = self.curSpeed - (self.dir * self.accel)
     if math.abs(self.curSpeed) < self.minSpeed then
         self.curSpeed = self.dir * self.minSpeed
     end
@@ -63,9 +63,19 @@ class('Well').extends(gfx.sprite)
       end
   end
 
-  function Well:moveWell()
-    local goalX = math.random(40, 360)
-    local goalY = math.random(40, 200)
-    --need a global var!
-    self:moveWithCollisions(goalX, goalY)
+function Well:moveWell(otherWell)
+    -- Calculate the direction vector between the two wells
+    local dx = self.x - otherWell.x
+    local dy = self.y - otherWell.y
+
+    -- Normalize the direction vector
+    local mag = math.sqrt(dx*dx + dy*dy)
+    dx = dx / mag
+    dy = dy / mag
+
+    -- Reverse the direction of the wells
+    self.dx = -dx
+    self.dy = -dy
+    otherWell.dx = dx
+    otherWell.dy = dy
   end

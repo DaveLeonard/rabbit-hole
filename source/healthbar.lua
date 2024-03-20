@@ -34,9 +34,10 @@ function Healthbar:damage(amount)
 end
 
 function Healthbar:heal(amount)
-	self.health += amount
-	if self.health >= 100 then
-		self.health = 100
-	end
-	print("Healed:"..self.health)
+		self.health += amount
+		if self.health > self.maxHealth then
+				self.health = self.maxHealth
+		end
+		self:updateHealth(self.health)
+		print("Healed:"..self.health)
 end
