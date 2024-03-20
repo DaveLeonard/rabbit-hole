@@ -6,22 +6,28 @@ class('Coin').extends(gfx.sprite)
 
   function Coin:init()
     Coin.super.init(self)
-    local coinImage = gfx.image.new("images/tile_0042")
+    local coinImage = gfx.image.new("images/carrot")
     self:setImage(coinImage)
     self:setCollideRect(0, 0, self:getSize())
     self:setGroups(1)
   end
 
-function Coin:moveCoin(otherCoin)
-  local minDistance = 99 -- minimum distance between coins
-  local randX, randY
-  repeat
-    randX = math.random(40, 360)
-    randY = math.random(40, 200)
-  until (otherCoin == nil) or (math.sqrt((randX - otherCoin.x)^2 + (randY - otherCoin.y)^2) >= minDistance)
-  self:moveWithCollisions(randX, randY)
+ function Coin:moveCoin()
+  function Coin:moveCoin()
+    -- Use a wider range for the random position
+    local randX = math.random(0, 400)
+    local randY = math.random(0, 240)
+
+    -- Add a random velocity to the coin
+    local randVelX = math.random(-5, 5)
+    local randVelY = math.random(-5, 5)
+
+    self:moveWithCollisions(randX, randY)
     self.velocityX = randVelX
     self.velocityY = randVelY
+  end
+   self.velocityX = randVelX
+   self.velocityY = randVelY
  end
 
   function Coin:collisionResponse(other)

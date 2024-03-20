@@ -54,6 +54,16 @@ local function resetTimer()
   playTimer = playdate.timer.new(playTime, playTime, 0, playdate.easingFunctions.linear)
 end
 
+-- Function that saves game data
+function saveGameData()
+    -- Save game data into a table first
+    local gameData = {
+        currentScore = score
+    }
+    -- Serialize game data table into the datastore
+    playdate.datastore.write(gameData)
+end
+
 
 sounds['background']:play(10)
 
@@ -141,7 +151,6 @@ function playdate.update()
   coinSprite2:moveTo(-100,-100)
 
    if playdate.buttonJustPressed(playdate.kButtonA) then
-    resetTimer()
     coinSprite:moveCoin(coinSprite2)
     coinSprite2:moveCoin(coinSprite)
     score = 0
