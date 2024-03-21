@@ -33,6 +33,16 @@ class("Hero").extends(AnimatedSprite)
     self:moveTo(goalX, goalY)
   end
 
+  function Hero:death()
+    local x, y = self:getPosition()
+    local imgtableDeath  = gfx.imagetable.new("images/misc-table-22-22")
+    playerDeath = AnimatedSprite.new(imgtableDeath)
+    playerDeath:addState('dead', 154, 155, {tickStep = 10})
+    playerDeath:moveTo(x,y)
+    playerDeath:playAnimation()
+    playerDeath:stopAnimation()
+  end
+
   -- Mise à jour du sprite hero
   function Hero:update()
 

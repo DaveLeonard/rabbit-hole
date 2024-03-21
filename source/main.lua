@@ -51,6 +51,10 @@ sounds = {
 
 local lastCoinMoveTime = 0
 
+function sleep(sec)
+    socket.select(nil, nil, sec)
+end
+
 function playdate.update()
 
   gfx.sprite.update()
@@ -201,14 +205,26 @@ function playdate.update()
     if(wellSprite:alphaCollision(hero)) then
       sounds['heroPain']:play()
       wellSprite:moveWell(wellSprite2, calculateNewPosition1)
-      hero:raz()
       healthSprite:damage(15)
+      if(healthSprite:getInfo()>=0) then
+        hero:death()
+        hero:raz()
+      else
+        hero:death()
+        os.exit()
+      end
     end
     if(wellSprite2:alphaCollision(hero)) then
       sounds['heroPain']:play()
       wellSprite2:moveWell(wellSprite, calculateNewPosition2)
-      hero:raz()
       healthSprite:damage(15)
+      if(healthSprite:getInfo()>=0) then
+        hero:death()
+        hero:raz()
+      else
+        hero:death()
+        os.exit()
+      end
     end
   end
 
