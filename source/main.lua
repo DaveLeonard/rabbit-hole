@@ -3,9 +3,9 @@ import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
 import "CoreLibs/animation"
-import "lib/AnimatedSprite.lua"
+import "libraries/AnimatedSprite/AnimatedSprite.lua"
 
-import "player"
+import "hero"
 import "coin"
 import "well"
 import "healthbar"
@@ -19,9 +19,9 @@ local snd = playdate.sound
 
 playdate.display.setRefreshRate(70) -- Refresh rate
 
-local playerSprite = nil
+local hero = nil
 
-local playerSpeed = 4
+local heroSpeed = 4
 
 local playTimer = nil
 local playTime = 30 * 1000
@@ -44,8 +44,8 @@ screenSize = { width = 400, height = 240, gridWidth = 20, hudHeight = 20 }
 
 sounds = {
   coinEaten  = snd.sampleplayer.new( "audio/playerpain.wav" ),
-  playerPain = snd.sampleplayer.new( "audio/playerdeath.wav" ),
-  playerDeath = snd.sampleplayer.new( "audio/playerdeath.wav" ),
+  heroPain = snd.sampleplayer.new( "audio/playerdeath.wav" ),
+  heroDeath = snd.sampleplayer.new( "audio/playerdeath.wav" ),
   background = snd.sampleplayer.new( "audio/RawrTheme.wav"  )
 }
 
@@ -54,6 +54,7 @@ local lastCoinMoveTime = 0
 function playdate.update()
 
   gfx.sprite.update()
+  playdate.timer.updateTimers()
 
 end
 
@@ -98,28 +99,33 @@ local function initialize()
 
   healthSprite = Healthbar(200,15,100)
 
-  wellSprite = Well(20, 120, 2, .1)
-  wellSprite2 = Well(40, 140, 2, .1)
-  playerSprite = Player()
-  playerSprite:add()
 
-  coinSprite = Coin()
-  coinSprite2 = Coin()
-  coinSprite:add()
-  coinSprite2:add()
+  -- Définitioin des sprites animés
+  -- https://github.com/Whitebrim/AnimatedSprite/wiki
+  -- https://devforum.play.date/t/animated-sprite-helpful-class/1884/20
+
+  local imgtableHero  = gfx.imagetable.new("images/sheet18-table-16-18")
+  local imgtableCoin  = gfx.imagetable.new("images/accesories-books-diamons-hair-table-22-22")
+  local imgtableWell  = gfx.imagetable.new("images/misc-table-22-22")
+
+  -- Définition des états des sprites
+  local statesHero    = AnimatedSprite.loadStates("states/hero.json")
+  local statesCoin    = AnimatedSprite.loadStates("states/coin.json")
+  local statesCoin2   = AnimatedSprite.loadStates("states/coin2.json")
+  local statesWell    = AnimatedSprite.loadStates("states/well.json")
+  local statesWell2   = AnimatedSprite.loadStates("states/well2.json")
+
+  -- Création des objets héro, pièces et puits
+  hero        = Hero(imgtableHero,statesHero,true)
+  coinSprite  = Coin(imgtableCoin,statesCoin,false)
+  coinSprite2 = Coin(imgtableCoin,statesCoin2,false)
+  wellSprite  = Well(imgtableWell,statesWell,true,20, 120, 2, .1)
+  wellSprite2 = Well(imgtableWell,statesWell2,true,40, 140, 2, .1)
+
   coinSprite:moveCoin(coinSprite2)
   coinSprite2:moveCoin(coinSprite)
 
 
-  local imagetable = gfx.imagetable.new("images/sheet18-table-16-18")
-  local sprite = AnimatedSprite.new(imagetable)
-  sprite:addState('down',19 ,24,{ tickStep = 10 })
-  sprite:addState('up',13 ,18,{ tickStep = 10 })
-  --sprite:addState("yoyo", 6, nil, {tickStep = 2, nextAnimation = "idle"}).asDefault()
-  sprite:moveTo(100, 110)
-  sprite :changeState('up', true)
-
-  sprite:playAnimation()
 
 
   local backgroundImage = gfx.image.new("images/background")
@@ -138,16 +144,12 @@ initialize()
 
 function playdate.update()
 
-  wellSprite:add()
-  wellSprite2:add()
-
 
   -- Déplacement des pièces toutes les 6 secondes
   local currentTime = math.ceil(playTimer.value/1000)
   if currentTime % 6 == 0 and currentTime ~= lastCoinMoveTime then
     coinSprite:moveCoin(coinSprite2)
     coinSprite2:moveCoin(coinSprite)
-
     -- Update the last move time
     lastCoinMoveTime = currentTime
   end
@@ -161,7 +163,7 @@ function playdate.update()
       gfx.clearClipRect()
     end
   )
-  playerSprite:moveTo(-100,-100)
+  hero:moveTo(-100,-100)
   wellSprite:moveTo(-100,-100)
   wellSprite2:moveTo(-100,-100)
   coinSprite:moveTo(-100,-100)
@@ -182,41 +184,30 @@ function playdate.update()
 
 
   else
-    if playdate.buttonIsPressed(playdate.kButtonUp) then
-      playerSprite:moveBy(0, -playerSpeed)
-    end
-    if playdate.buttonIsPressed(playdate.kButtonRight) then
-      playerSprite:moveBy(playerSpeed, 0)
-    end
-    if playdate.buttonIsPressed(playdate.kButtonDown) then
-      playerSprite:moveBy(0, playerSpeed)
-    end
-    if playdate.buttonIsPressed(playdate.kButtonLeft) then
-      playerSprite:moveBy(-playerSpeed, 0)
-    end
 
-    if(coinSprite:alphaCollision(playerSprite)) then
+
+    if(coinSprite:alphaCollision(hero)) then
       sounds['coinEaten']:play()
       coinSprite:moveCoin(coinSprite2)
       score = score + 1
       healthSprite:heal(15)
     end
-    if(coinSprite2:alphaCollision(playerSprite)) then
+    if(coinSprite2:alphaCollision(hero)) then
       sounds['coinEaten']:play()
       coinSprite2:moveCoin(coinSprite)
       score = score + 1
       healthSprite:heal(15)
     end
-    if(wellSprite:alphaCollision(playerSprite)) then
-      sounds['playerPain']:play()
+    if(wellSprite:alphaCollision(hero)) then
+      sounds['heroPain']:play()
       wellSprite:moveWell(wellSprite2, calculateNewPosition1)
-      playerSprite:raz()
+      hero:raz()
       healthSprite:damage(15)
     end
-    if(wellSprite2:alphaCollision(playerSprite)) then
-      sounds['playerPain']:play()
+    if(wellSprite2:alphaCollision(hero)) then
+      sounds['heroPain']:play()
       wellSprite2:moveWell(wellSprite, calculateNewPosition2)
-      playerSprite:raz()
+      hero:raz()
       healthSprite:damage(15)
     end
   end

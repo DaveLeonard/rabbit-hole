@@ -1,28 +1,37 @@
+import "libraries/AnimatedSprite/AnimatedSprite.lua"
+
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 
 
-class('Well').extends(gfx.sprite)
+class("Well").extends(AnimatedSprite)
+  local xConst <const> = 121
+  local yConst <const> = 162
+  local zConst <const> = 0
 
-  function Well:init(x, y, speed, accel)
-    Well.super.init(self)
-    local wellImage = gfx.image.new("images/well")
-    self:setImage(wellImage)
-    self:moveTo(x, y)
-    self:setCollideRect(0, 0,self:getSize())
-    self:setZIndex(-32768)
-    self:setGroups(1)
+
+  function Well:init(imagetable,states,animate, x, y, speed, accel)
+    Well.super.init(self,imagetable,states,animate, x, y, speed, accel)
+
     self.speed = speed
     self.accel = accel
     self.curSpeed = speed
     self.minSpeed = speed / 2
     self.yOffset = math.random(-25, 25) / 10
     self.dir = 1
+
+    self:setCollideRect(0, 0,22,22)
+    self:setGroups(1)
+    self:setCollidesWithGroups({1, 2})
+    self:setCenter(0, 0)
+    self:setZIndex(zConst)
+    self:moveTo(x, y)
+    self:playAnimation()
+
   end
 
 
    function Well:update()
-    Well.super.update(self)
     -- Used for bouncing the arrow back
     -- local actualX, actualY, collisions, collisionsLen = self:moveWithCollisions(self.x + self.dir * self.curSpeed, self.y + self.yOffset)
     -- if collisionsLen ~= 0 then
@@ -48,15 +57,16 @@ class('Well').extends(gfx.sprite)
       self.yOffset = -self.yOffset
     end
 
-    self:moveWithCollisions(newx,newy)
+    self:moveTo(newx,newy)
     self.curSpeed = self.curSpeed - (self.dir * self.accel)
     if math.abs(self.curSpeed) < self.minSpeed then
         self.curSpeed = self.dir * self.minSpeed
     end
+     self:updateAnimation()
   end
 
   function Well:collisionResponse(other)
-      if other:isA(Player) then
+      if other:isA(hero) then
         retrun "freeze"
       else
         return "bounce"

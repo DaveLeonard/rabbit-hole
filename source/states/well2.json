@@ -1,0 +1,10 @@
+[
+    {
+        "name": "default",
+        "firstFrameIndex": 58,
+        "framesCount": 2,
+        "tickStep": 15,
+        "yoyo" : true
+
+    }
+]

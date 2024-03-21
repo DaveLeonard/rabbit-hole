@@ -1,0 +1,64 @@
+[
+    {
+        "name": "default",
+        "firstFrameIndex": 1,
+        "framesCount": 1
+    },
+    {
+        "name":"idle",
+        "firstFrameIndex": 19,
+        "framesCount": 1
+    },
+    {
+        "name":"idle up",
+        "firstFrameIndex": 13,
+        "framesCount": 1
+    },
+    {
+        "name":"idle down",
+        "firstFrameIndex": 19,
+        "framesCount": 1
+    },
+    {
+        "name":"idle left",
+        "firstFrameIndex": 26,
+        "framesCount": 1
+    },
+    {
+        "name":"idle right",
+        "firstFrameIndex": 12,
+        "framesCount": 1
+    },
+    {
+        "name":"up",
+        "firstFrameIndex": 13,
+        "framesCount": 5,
+        "tickStep": 3,
+        "yoyo": true,
+        "nextAnimation": "idle up"
+    },
+    {
+        "name":"down",
+        "firstFrameIndex": 20,
+        "framesCount": 5,
+        "tickStep": 3,
+        "yoyo": true,
+        "nextAnimation": "idle down"
+    },
+    {
+        "name":"left",
+        "firstFrameIndex": 1,
+        "framesCount": 5,
+        "tickStep": 3,
+        "yoyo": true,
+        "nextAnimation": "idle left"
+    },
+    {
+        "name":"right",
+        "firstFrameIndex": 7,
+        "framesCount": 5,
+        "tickStep": 3,
+        "yoyo": true,
+        "nextAnimation": "idle right"
+    }
+]
