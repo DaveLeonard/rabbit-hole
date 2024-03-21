@@ -14,7 +14,7 @@ class("Coin").extends(AnimatedSprite)
   function Coin:init(imagetable,states,animate)
     Coin.super.init(self, imagetable, states, animate)
 
-    self:setCollideRect(0, 0, 22,22)
+    self:setCollideRect(0, 0, 44,44)
     self:setGroups(2)
     self:setCollidesWithGroups({1, 2})
     self:setCenter(0, 0)
@@ -25,8 +25,8 @@ class("Coin").extends(AnimatedSprite)
 
  function Coin:moveCoin()
     -- Use a wider range for the random position
-    local randX = math.random(0, 400)
-    local randY = math.random(0, 240)
+    local randX = math.random(44, 336)
+    local randY = math.random(44, 216)
 
     -- Add a random velocity to the coin
     local randVelX = math.random(-5, 5)

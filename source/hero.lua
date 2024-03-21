@@ -36,20 +36,23 @@ class("Hero").extends(AnimatedSprite)
   -- Mise à jour du sprite hero
   function Hero:update()
 
+    -- Get the current position
+    local x, y = self:getPosition()
+
     -- Réactions quand on appuie sur un bouton
-    if pd.buttonIsPressed( pd.kButtonUp ) then
+    if pd.buttonIsPressed( pd.kButtonUp ) and y > 20 then
         self:changeState('up',true)
         self:moveBy( 0, -2 )
     end
-    if pd.buttonIsPressed( pd.kButtonRight ) then
+    if pd.buttonIsPressed( pd.kButtonRight ) and x < screenSize["width"]-7 - self:getSize() then
       self:changeState('right',true)
       self:moveBy( 2, 0 )
     end
-    if pd.buttonIsPressed( pd.kButtonDown ) then
+    if pd.buttonIsPressed( pd.kButtonDown )  and y < screenSize["height"]-7 - self:getSize() then
       self:changeState('down',true)
       self:moveBy( 0, 2 )
     end
-    if pd.buttonIsPressed( pd.kButtonLeft ) then
+    if pd.buttonIsPressed( pd.kButtonLeft ) and x > 0 then
         self:changeState('left',true)
         self:moveBy( -2, 0 )
     end

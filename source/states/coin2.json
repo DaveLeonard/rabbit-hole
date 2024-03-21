@@ -4,7 +4,8 @@
         "firstFrameIndex": 179,
         "framesCount": 2,
         "tickStep": 15,
+        "xScale": 2,
+        "yScale": 2,
         "yoyo" : true
-
     }
 ]

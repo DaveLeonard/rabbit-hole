@@ -23,7 +23,7 @@ function Healthbar:updateHealth(newHealth)
 end
 
 function Healthbar:damage(amount)
-	self.health -= amount
+	self.health = self.health - amount
 	if self.health <= 0 then
 		self.health = 0
 		sounds['playerDeath']:play()
@@ -34,7 +34,7 @@ function Healthbar:damage(amount)
 end
 
 function Healthbar:heal(amount)
-		self.health += amount
+		self.health = self.health+ amount
 		if self.health > self.maxHealth then
 				self.health = self.maxHealth
 		end

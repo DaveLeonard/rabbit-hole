@@ -2,32 +2,44 @@
     {
         "name": "default",
         "firstFrameIndex": 1,
-        "framesCount": 1
+        "framesCount": 1,
+        "xScale": 2,
+        "yScale": 2
     },
     {
         "name":"idle",
         "firstFrameIndex": 19,
-        "framesCount": 1
+        "framesCount": 1,
+        "xScale": 2,
+        "yScale": 2
     },
     {
         "name":"idle up",
         "firstFrameIndex": 13,
-        "framesCount": 1
+        "framesCount": 1,
+        "xScale": 2,
+        "yScale": 2
     },
     {
         "name":"idle down",
         "firstFrameIndex": 19,
-        "framesCount": 1
+        "framesCount": 1,
+        "xScale": 2,
+        "yScale": 2
     },
     {
         "name":"idle left",
         "firstFrameIndex": 26,
-        "framesCount": 1
+        "framesCount": 1,
+        "xScale": 2,
+        "yScale": 2
     },
     {
         "name":"idle right",
         "firstFrameIndex": 12,
-        "framesCount": 1
+        "framesCount": 1,
+        "xScale": 2,
+        "yScale": 2
     },
     {
         "name":"up",
@@ -35,6 +47,8 @@
         "framesCount": 5,
         "tickStep": 3,
         "yoyo": true,
+        "xScale": 2,
+        "yScale": 2,
         "nextAnimation": "idle up"
     },
     {
@@ -43,6 +57,8 @@
         "framesCount": 5,
         "tickStep": 3,
         "yoyo": true,
+        "xScale": 2,
+        "yScale": 2,
         "nextAnimation": "idle down"
     },
     {
@@ -51,6 +67,8 @@
         "framesCount": 5,
         "tickStep": 3,
         "yoyo": true,
+        "xScale": 2,
+        "yScale": 2,
         "nextAnimation": "idle left"
     },
     {
@@ -59,6 +77,8 @@
         "framesCount": 5,
         "tickStep": 3,
         "yoyo": true,
+        "xScale": 2,
+        "yScale": 2,
         "nextAnimation": "idle right"
     }
 ]

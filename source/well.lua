@@ -20,7 +20,7 @@ class("Well").extends(AnimatedSprite)
     self.yOffset = math.random(-25, 25) / 10
     self.dir = 1
 
-    self:setCollideRect(0, 0,22,22)
+    self:setCollideRect(0, 0,44,44)
     self:setGroups(1)
     self:setCollidesWithGroups({1, 2})
     self:setCenter(0, 0)
