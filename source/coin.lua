@@ -1,33 +1,51 @@
+import "libraries/AnimatedSprite/AnimatedSprite.lua"
+
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 
 
-class('Coin').extends(gfx.sprite)
+class("Coin").extends(AnimatedSprite)
+  local xConst <const> = 121
+  local yConst <const> = 162
+  local zConst <const> = 900
 
-  function Coin:init()
-    Coin.super.init(self)
-    local coinImage = gfx.image.new("images/tile_0042")
-    self:setImage(coinImage)
-    self:setCollideRect(0, 0, self:getSize())
-    self:setGroups(1)
+
+
+  function Coin:init(imagetable,states,animate)
+    Coin.super.init(self, imagetable, states, animate)
+
+    self:setCollideRect(0, 0, 44,44)
+    self:setGroups(2)
+    self:setCollidesWithGroups({1, 2})
+    self:setCenter(0, 0)
+    self:setZIndex(zConst)
+    self:moveCoin()
+    self:playAnimation()
   end
 
-function Coin:moveCoin(otherCoin)
-  local minDistance = 99 -- minimum distance between coins
-  local randX, randY
-  repeat
-    randX = math.random(40, 360)
-    randY = math.random(40, 200)
-  until (otherCoin == nil) or (math.sqrt((randX - otherCoin.x)^2 + (randY - otherCoin.y)^2) >= minDistance)
-  self:moveWithCollisions(randX, randY)
+ function Coin:moveCoin()
+    -- Use a wider range for the random position
+    local randX = math.random(44, 336)
+    local randY = math.random(44, 216)
+
+    -- Add a random velocity to the coin
+    local randVelX = math.random(-5, 5)
+    local randVelY = math.random(-5, 5)
+
+    self:moveTo(randX, randY)
     self.velocityX = randVelX
     self.velocityY = randVelY
- end
+  end
+
 
   function Coin:collisionResponse(other)
-      if other:isA(Player) then
+      if other:isA(hero) then
         retrun "freeze"
       else
         return "bounce"
       end
+  end
+
+  function Coin:update()
+      self:updateAnimation()
   end

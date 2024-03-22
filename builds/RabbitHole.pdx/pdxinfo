@@ -1,11 +1,2 @@
-name=Styve Rabbit Hole
-author=Styve Rocha
-description=Eat all of them
-bundleID=com.rochastyve.rabbithole
-version=1.0.2
-buildNumber=20
-imagePath=SystemAssets
-pdxinfoURL=https://github.com/DaveLeonard/rabbit-hole/blob/main/pdxinfo
-gameURL=https://github.com/DaveLeonard/rabbit-hole/tree/main/builds/RabbitHole.pdx.zip
 pdxversion=20400
-buildtime=764246991
+buildtime=764420194
