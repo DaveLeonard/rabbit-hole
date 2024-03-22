@@ -1,17 +1,48 @@
+--[[
+   ____              __       __          __    __  __          ___
+  /\  _`\           /\ \     /\ \      __/\ \__/\ \/\ \        /\_ \
+  \ \ \L\ \     __  \ \ \____\ \ \____/\_\ \ ,_\ \ \_\ \    ___\//\ \      __
+   \ \ ,  /   /'__`\ \ \ '__`\\ \ '__`\/\ \ \ \/\ \  _  \  / __`\\ \ \   /'__`\
+    \ \ \\ \ /\ \L\.\_\ \ \L\ \\ \ \L\ \ \ \ \ \_\ \ \ \ \/\ \L\ \\_\ \_/\  __/
+     \ \_\ \_\ \__/.\_\\ \_,__/ \ \_,__/\ \_\ \__\\ \_\ \_\ \____//\____\ \____\
+      \/_/\/ /\/__/\/_/ \/___/   \/___/  \/_/\/__/ \/_/\/_/\/___/ \/____/\/____/
+
+  Author:        David Senate
+  Creation date: 03-18-2024
+  Update date:   03-22-2024
+  Version :      1.0.16
+
+  This file defines the behavior of a hero character in the game. It extends the AnimatedSprite class and provides methods for initializing, reviving, and updating the hero.
+  The hero can move in four directions (up, down, left, right) based on button inputs. It also has a death animation when it dies.
+
+  Usage:
+  - Create a new instance of the Hero class using the `Hero:init()` method.
+  - Call the `Hero:update()` method in the game loop to update the hero's position and animation.
+  - Call the `Hero:raz()` method to revive the hero at a random position.
+  - Call the `Hero:death()` method to play the death animation when the hero dies.
+
+  Example:
+  local hero = Hero()
+  hero:init(imagetable, states, animate)
+  hero:update()
+  hero:raz()
+  hero:death()
+]]
+
 import "libraries/AnimatedSprite/AnimatedSprite.lua"
 
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 
--- Classe hero qui permet de definir le comportement d'un hero
+-- Class hero which allows to define the behavior of a hero
 class("Hero").extends(AnimatedSprite)
 
+  -- Constants for initial hero position and z-index
   local xConst <const> = 121
   local yConst <const> = 162
   local zConst <const> = 10000
 
 
-  -- Initialisation d'un héro, toujours fais quand on créée un nouveau héro
   function Hero:init(imagetable,states,animate)
     Hero.super.init(self, imagetable, states, animate)
 
@@ -25,7 +56,7 @@ class("Hero").extends(AnimatedSprite)
 
   end
 
-  -- Faire revivre un hero
+-- Revive a heroo
   function Hero:raz()
     local goalX = math.random(40, 360)
     local goalY = math.random(40, 200)
@@ -40,16 +71,24 @@ class("Hero").extends(AnimatedSprite)
     playerDeath:addState('dead', 154, 155, {tickStep = 10})
     playerDeath:moveTo(x,y)
     playerDeath:playAnimation()
-    playerDeath:stopAnimation()
   end
 
-  -- Mise à jour du sprite hero
+  function Hero:dead()
+    local x, y = self:getPosition()
+    local imgtableDeath  = gfx.imagetable.new("images/misc-table-22-22")
+    playerDeath = AnimatedSprite.new(imgtableDeath)
+    playerDeath:addState('dead', 154, 155, {tickStep = 10})
+    playerDeath:moveTo(x,y)
+    playerDeath:playAnimation()
+  end
+
+-- update the hero's position and animation.
   function Hero:update()
 
     -- Get the current position
     local x, y = self:getPosition()
 
-    -- Réactions quand on appuie sur un bouton
+    -- Movements based on button inputs
     if pd.buttonIsPressed( pd.kButtonUp ) and y > 20 then
         self:changeState('up',true)
         self:moveBy( 0, -2 )

@@ -27,7 +27,8 @@ function Healthbar:damage(amount)
   if self.health <= 0 then
     self.health = 0
     sounds['heroDeath']:play()
-    --os.exit()
+  else
+    sounds['heroPain']:play()--os.exit()
   end
   self:updateHealth(self.health)
   print("Damage:"..self.health)

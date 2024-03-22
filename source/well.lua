@@ -44,15 +44,16 @@ class("Well").extends(AnimatedSprite)
 
 
     if(newx<0 or newx>400) then
-			if(newx<0) then newx=0 end
-			if(newx>400) then newx=400 end
+			if(newx<0) then newx=44 end
+			if(newx>400) then newx=358 end
       velX = -velX
       self.yOffset = -self.yOffset
     end
 
     if(newy<0 or newy>240) then
-			if(newy<0) then newy=0 end
-			if(newy>240) then newy=240 end
+			if(newy<0) then newy=44
+       end
+			if(newy>240) then newy=198 end
       velY = -velY
       self.yOffset = -self.yOffset
     end
@@ -82,6 +83,7 @@ function Well:moveWell(otherWell)
     local mag = math.sqrt(dx*dx + dy*dy)
     dx = dx / mag
     dy = dy / mag
+
 
     -- Reverse the direction of the wells
     self.dx = -dx

@@ -1,3 +1,5 @@
 {
-  "workspace.color" : 2
+  "editor.default_syntax" : "lua",
+  "workspace.color" : 2,
+  "workspace.preview_root" : "."
 }
