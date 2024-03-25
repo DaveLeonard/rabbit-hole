@@ -71,6 +71,7 @@ class("Hero").extends(AnimatedSprite)
     playerDeath:addState('dead', 154, 155, {tickStep = 10})
     playerDeath:moveTo(x,y)
     playerDeath:playAnimation()
+    screenShake(200, 6)
   end
 
   function Hero:dead()

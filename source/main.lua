@@ -22,6 +22,7 @@ import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
 import "CoreLibs/animation"
+import "CoreLibs/crank"
 
 -- Third-Party Libraries
 import "libraries/AnimatedSprite/AnimatedSprite.lua"
@@ -50,11 +51,13 @@ sounds = {
   background = snd.sampleplayer.new( "audio/RawrTheme.wav"  )
 }
 local lastCoinMoveTime = 0
+local myTicks = 0
 
 -- Constants
 local REFRESH_RATE = 70
 local HERO_SPEED = 4
 local PLAY_TIME = 30 * 1000
+local ticksPerRevolution = 6
 
 -- Global variables
 screenSize = { width = 400, height = 240, gridWidth = 44, hudHeight = 44 }
@@ -149,8 +152,59 @@ local function initialize()
   resetTimer()
 end
 
+function saveGameData()
+    -- Save game data into a table first
+    local gameData = {
+        currentLevel = level,
+        currentHealth = healthSprite:getInfo()
+    }
+    -- Serialize game data table into the datastore
+    playdate.datastore.write(gameData)
+end
+
+function screenShake(shakeTime, shakeMagnitude)
+    -- Creating a value timer that goes from shakeMagnitude to 0, over
+    -- the course of 'shakeTime' milliseconds
+    local shakeTimer = playdate.timer.new(shakeTime, shakeMagnitude, 0)
+    -- Every frame when the timer is active, we shake the screen
+    shakeTimer.updateCallback = function(timer)
+        -- Using the timer value, so the shaking magnitude
+        -- gradually decreases over time
+        local magnitude = math.floor(timer.value)
+        local shakeX = math.random(-magnitude, magnitude)
+        local shakeY = math.random(-magnitude, magnitude)
+        playdate.display.setOffset(shakeX, shakeY)
+    end
+    -- Resetting the display offset at the end of the screen shake
+    shakeTimer.timerEndedCallback = function()
+        playdate.display.setOffset(0, 0)
+    end
+end
+
+local function gameRestart()
+  print("Game restarted")
+  screenShake(600, 6)
+  playdate.display.flush()
+end
+
+
 -- Function to update the game state
 function playdate.update()
+
+  -- Crank
+  local crankTicks = playdate.getCrankTicks(ticksPerRevolution)
+
+  if crankTicks == 1 then
+    myTicks += 1
+    if(myTicks >= 18) then
+      healthSprite:heal(10)
+      print("Crank has healed 15")
+      myTicks = 0
+    end
+
+  elseif crankTicks == -1 then
+      print("Backward tick")
+  end
 
   -- Move the coins every 6 seconds
   local currentTime = math.ceil(playTimer.value/1000)
@@ -161,8 +215,16 @@ function playdate.update()
     lastCoinMoveTime = currentTime
   end
 
-  if playTimer.value == 0 then
-    local backgroundImage = gfx.image.new("images/splashscreen")
+  if (playTimer.value == 0 or healthSprite:getInfo()<=0 )then
+    hero:moveTo(-100,-100)
+    wellSprite:moveTo(-100,-100)
+    wellSprite2:moveTo(-100,-100)
+    coinSprite:moveTo(-100,-100)
+    coinSprite2:moveTo(-100,-100)
+    playdate.stop()
+    playdate.graphics.clear()
+    playdate.display.flush()
+    local backgroundImage = gfx.image.new("images/menu-image")
     gfx.sprite.setBackgroundDrawingCallback(
       function(x, y, width, height)
         gfx.setClipRect(x, y, width, height)
@@ -170,11 +232,7 @@ function playdate.update()
         gfx.clearClipRect()
       end
       )
-    hero:moveTo(-100,-100)
-    wellSprite:moveTo(-100,-100)
-    wellSprite2:moveTo(-100,-100)
-    coinSprite:moveTo(-100,-100)
-    coinSprite2:moveTo(-100,-100)
+    screenShake(200, 5)
 
     if playdate.buttonJustPressed(playdate.kButtonA) then
       coinSprite:moveCoin(coinSprite2)
@@ -232,8 +290,22 @@ function playdate.update()
   gfx.drawText("Health: ", 90, 5)
 end
 
+function playdate.gameWillTerminate()
+  saveGameData()
+end
+
+function playdate.deviceWillSleep()
+  saveGameData()
+end
+
 -- Main
 playdate.display.setRefreshRate(REFRESH_RATE)
 sounds['background']:play(10)
+local menu = playdate.getSystemMenu()
+local menuItem, error = menu:addMenuItem("restart", function()
+  gameRestart()
+end)
+local myMenuImage = playdate.graphics.image.new("images/menu-image")
+playdate.setMenuImage(myMenuImage,100)
 initialize()
 
