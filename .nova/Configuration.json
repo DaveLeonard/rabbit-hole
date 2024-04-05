@@ -1,5 +1,6 @@
 {
   "editor.default_syntax" : "lua",
+  "pro.albright.luacheck.run-from-file-folder" : true,
   "workspace.color" : 2,
   "workspace.preview_root" : "."
 }

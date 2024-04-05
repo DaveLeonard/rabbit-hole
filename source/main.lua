@@ -26,6 +26,7 @@ import "CoreLibs/crank"
 
 -- Third-Party Libraries
 import "libraries/AnimatedSprite/AnimatedSprite.lua"
+import "libraries/ParallaxBackground/parallax.lua"
 
 -- Own Modules
 import "hero"
@@ -70,6 +71,7 @@ ballY = maxY / 2
 ballR = 15
 velX = 2
 velY = 2
+
 
 -- Function to update the game state
 function playdate.update()
@@ -117,6 +119,16 @@ local function initialize()
   math.randomseed(playdate.getSecondsSinceEpoch())
   healthSprite = Healthbar(200,15,100)
 
+  --board image
+  backgroundImage = gfx.image.new("images/background")
+  backgroundSprite = gfx.sprite.new(backgroundImage)
+  backgroundSprite:setZIndex(-32768)
+  backgroundSprite:setCenter(0, 0)
+  backgroundSprite:add()
+  assert( backgroundImage )
+
+
+
   -- Definition of animated sprites
   -- https://github.com/Whitebrim/AnimatedSprite/wiki
   -- https://devforum.play.date/t/animated-sprite-helpful-class/1884/20
@@ -142,11 +154,10 @@ local function initialize()
   coinSprite2:moveCoin(coinSprite)
 
   local backgroundImage = gfx.image.new("images/background")
+  assert( backgroundImage )
   gfx.sprite.setBackgroundDrawingCallback(
     function(x, y, width, height)
-      gfx.setClipRect(x, y, width, height)
       backgroundImage:draw(0, 0)
-      gfx.clearClipRect()
     end
   )
   resetTimer()
@@ -191,6 +202,16 @@ end
 -- Function to update the game state
 function playdate.update()
 
+
+    -- Scroll the background slower
+backgroundX = (backgroundX - 1) % -background:getWidth()
+
+-- Scroll the foreground faster
+foregroundX = (foregroundX - 2) % -foreground:getWidth()
+
+-- Redraw the screen
+draw()
+
   -- Crank
   local crankTicks = playdate.getCrankTicks(ticksPerRevolution)
 
@@ -216,11 +237,7 @@ function playdate.update()
   end
 
   if (playTimer.value == 0 or healthSprite:getInfo()<=0 )then
-    hero:moveTo(-100,-100)
-    wellSprite:moveTo(-100,-100)
-    wellSprite2:moveTo(-100,-100)
-    coinSprite:moveTo(-100,-100)
-    coinSprite2:moveTo(-100,-100)
+    playdate.graphics.sprite.removeAll()
     playdate.stop()
     playdate.graphics.clear()
     playdate.display.flush()
@@ -297,7 +314,6 @@ end
 function playdate.deviceWillSleep()
   saveGameData()
 end
-
 -- Main
 playdate.display.setRefreshRate(REFRESH_RATE)
 sounds['background']:play(10)
